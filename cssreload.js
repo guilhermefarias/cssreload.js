@@ -20,7 +20,7 @@ var CssReload = {
 			thisFile.href = thisFile.href.replace(/\?.*|$/, reloadQueryString);
 		});
 	}
-});
+};
 
 CssReload.setup(2);
 
