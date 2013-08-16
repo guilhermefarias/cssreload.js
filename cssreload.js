@@ -1,25 +1,28 @@
-var CssReload = (function ($) {
-	files = null;
+var CssReload = {
+	files: null,
+	setup: function(timeInSecond){
+		var timeInMilis;
 
-	function setup (files) {
-		var time = Number(prompt('Digite em segundos o tempo de atualização'));
-
-		if (isNaN(time)) {
-			setup();
+		if(timeInSecond){
+			timeInMilis = timeInSecond * 1000;	
+		} else {
+			timeInSecond = prompt('Digite o intervalo de atualização do CSS em segundos');
+			timeInMilis = 1000 * parseInt(timeInSecond);
 		}
+		
+		CssReload.files = document.querySelectorAll('link[rel="stylesheet"]');
+		setInterval(CssReload.refresh, timeInMilis);
+	},
+	refresh: function(){
+		var reloadQueryString = '?reload=' + Date.now();
 
-		files = $('link[rel="stylesheet"]');
-		time = time * 1000;
-		setInterval(CssReload.refresh,time);
-	}
-
-	function refresh () {
-		var reloadQueryString = '?reload=' + new Date().getTime();
-		CssReload.files.each(function () {
-			this.href = this.href.replace(/\?.*|$/, reloadQueryString);
+		[].forEach.call(CssReload.files, function(thisFile){
+			thisFile.href = thisFile.href.replace(/\?.*|$/, reloadQueryString);
 		});
 	}
+});
 
-	return setup;
+CssReload.setup(2);
 
-})(jQuery);
+// "2" is the interval in seconds of updating the CSS,
+// If none is set, the prompt will appear to you.
